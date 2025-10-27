@@ -155,19 +155,40 @@ struct mainResults {
         start = high_resolution_clock::now();
         auto itSet = st.begin();
         advance(itSet, st.size() / 2);
-        
+        st.erase(itSet);
 
+        end = high_resolution_clock::now();
+        results.setTime = duration_cast<microseconds>(end - start).count();
 
+        return results;
 
+    }
+
+    // display in a neat table
+    
+    void displayResults(const string& raceName, const mainResults& results) {   
+        cout << "Operation    " << "Vector    " << "List      " << "Set       " << endl;
+        cout << "\tRead" << results.vectorTime << results.listTime << results.setTime << endl;
+        cout << "\tSort" << results.vectorTime << results.listTime << results.setTime << endl;
+        cout << "\tInsert" << results.vectorTime << results.listTime << results.setTime << endl;
+        cout << "\tDelete" << results.vectorTime << results.listTime << results.setTime << endl;
     }
 
 
 
 
-
-
 int main() {
-    
+
+    // read data from file
+    vector<string> data = readStringsFromFile("codes.txt");
+
+    // run the races now
+   mainResults readResults = readingRace(data);
+   mainResults sortResults = sortingRace(data);
+   mainResults insertResults = insertingRace(data);
+   mainResults deleteResults = deletingRace(data);
+
+   
     //input chrono timer from canvas
        // Start timing
     auto start = high_resolution_clock::now();
