@@ -81,6 +81,52 @@ struct mainResults {
         end = high_resolution_clock::now();
         results.listTime = duration_cast<microseconds>(end - start).count();
 
+        // set sorting but sorting is already done when inserting
+        set<string> st(data);
+        start = high_resolution_clock::now();
+
+        end = high_resolution_clock::now();
+        results.setTime =  - 1; // already sorted
+
+        return results;
+
+    }
+
+    // race 3 for inserting. Insert the value "TESTCODE" into the middle of the vector or the middle of the list, or into the set
+
+    mainResults insertingRace(const vector<string>& data) {
+        mainResults results = {0.0, 0.0, 0.0};
+        const string toInsert = "TESTCODE";
+
+        // vector inserting
+        vector<string> vec(data);
+        auto start = high_resolution_clock::now();
+        vec.insert(vec.begin() + vec.size() / 2, toInsert);
+
+        auto end = high_resolution_clock::now();
+        results.vectorTime = duration_cast<microseconds>(end - start).count();
+
+        // list inserting
+        list<string> lst(data);
+        start = high_resolution_clock::now();
+        auto it = lst.begin();
+        advance(it, lst.size() / 2);
+        lst.insert(it, toInsert);
+
+        end = high_resolution_clock::now();
+        results.listTime = duration_cast<microseconds>(end - start).count();
+
+        // set inserting
+        set<string> st(data);
+        start = high_resolution_clock::now();
+        st.insert(toInsert);
+
+        end = high_resolution_clock::now();
+        results.setTime = duration_cast<microseconds>(end - start).count();
+
+        return results;
+    }
+
 
 
 
