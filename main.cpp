@@ -14,9 +14,9 @@ using namespace std::chrono;
 
 // first we create a struct to hold our results
 struct mainResults {
-    double vectorTime;
-    double listTime;
-    double setTime;
+    long long vectorTime;
+    long long listTime;
+    long long setTime;
     
 };
 
@@ -34,7 +34,7 @@ struct mainResults {
     // The first race is READING. The challenge is to read the 20,000 data elements into each of these data structures: vector, list, set
 
     mainResults readingRace(const vector<string>& data) {
-        mainResults results = {0.0, 0.0, 0.0};
+        mainResults results = {0, 0, 0};
 
         // vector reading
         auto start = high_resolution_clock::now(); // start timing  
@@ -45,14 +45,14 @@ struct mainResults {
 
         //list reading
         start = high_resolution_clock::now();
-        list<string> lst(data);
+        list<string> lst(data.begin(), data.end());
 
         end = high_resolution_clock::now();
         results.listTime = duration_cast<microseconds>(end - start).count();
 
         //set reading
         start = high_resolution_clock::now();
-        set<string> st(data);
+        set<string> st(data.begin(), data.end());
 
         end = high_resolution_clock::now();
         results.setTime = duration_cast<microseconds>(end - start).count();
@@ -63,7 +63,7 @@ struct mainResults {
     
 // race 2 for sorting the data structures
     mainResults sortingRace(const vector<string>& data) {
-        mainResults results = {0.0, 0.0, 0.0};
+        mainResults results = {0, 0, 0};
 
         // vector sorting
         vector<string> vec(data);
@@ -74,7 +74,7 @@ struct mainResults {
         results.vectorTime = duration_cast<microseconds>(end - start).count();
 
         // list sorting
-        list<string> lst(data);
+        list<string> lst(data.begin(), data.end());
         start = high_resolution_clock::now();
         lst.sort();
 
@@ -82,7 +82,7 @@ struct mainResults {
         results.listTime = duration_cast<microseconds>(end - start).count();
 
         // set sorting but sorting is already done when inserting
-        set<string> st(data);
+        set<string> st(data.begin(), data.end());
         start = high_resolution_clock::now();
 
         end = high_resolution_clock::now();
@@ -95,7 +95,7 @@ struct mainResults {
     // race 3 for inserting. Insert the value "TESTCODE" into the middle of the vector or the middle of the list, or into the set
 
     mainResults insertingRace(const vector<string>& data) {
-        mainResults results = {0.0, 0.0, 0.0};
+        mainResults results = {0, 0, 0};
         const string toInsert = "TESTCODE";
 
         // vector inserting
@@ -107,7 +107,7 @@ struct mainResults {
         results.vectorTime = duration_cast<microseconds>(end - start).count();
 
         // list inserting
-        list<string> lst(data);
+        list<string> lst(data.begin(), data.end());
         start = high_resolution_clock::now();
         auto it = lst.begin();
         advance(it, lst.size() / 2);
@@ -117,7 +117,7 @@ struct mainResults {
         results.listTime = duration_cast<microseconds>(end - start).count();
 
         // set inserting
-        set<string> st(data);
+        set<string> st(data.begin(), data.end());
         start = high_resolution_clock::now();
         st.insert(toInsert);
 
@@ -130,7 +130,7 @@ struct mainResults {
     //  race 4 for deleting. Delete the middle-ish element of the vector, the list, or the set
 
     mainResults deletingRace(const vector<string> &data) {
-        mainResults results = {0.0, 0.0, 0.0};
+        mainResults results = {0, 0, 0};
 
         // vector deleting
         vector<string> vec(data);
@@ -141,7 +141,7 @@ struct mainResults {
         results.vectorTime = duration_cast<microseconds>(end - start).count();
 
         // list deleting
-        list<string> lst(data);
+        list<string> lst(data.begin(), data.end());
         start = high_resolution_clock::now();
         auto it = lst.begin();
         advance(it, lst.size() / 2);
@@ -151,7 +151,7 @@ struct mainResults {
         results.listTime = duration_cast<microseconds>(end - start).count();
 
         // set deleting
-        set<string> st(data);
+        set<string> st(data.begin(), data.end());
         start = high_resolution_clock::now();
         auto itSet = st.begin();
         advance(itSet, st.size() / 2);
@@ -166,13 +166,13 @@ struct mainResults {
 
     // display in a neat table
     
-    void displayResults(const string& raceName, const mainResults& results) {   
-        cout << "Operation    " << "Vector    " << "List      " << "Set       " << endl;
-        cout << "\tRead" << results.vectorTime << results.listTime << results.setTime << endl;
-        cout << "\tSort" << results.vectorTime << results.listTime << results.setTime << endl;
-        cout << "\tInsert" << results.vectorTime << results.listTime << results.setTime << endl;
-        cout << "\tDelete" << results.vectorTime << results.listTime << results.setTime << endl;
-    }
+    void displayResults(const mainResults& read, const mainResults& sort, const mainResults& insert, const mainResults& deletes) {   
+        cout << "Operation\tVector\t\tList\t\tSet" << endl;
+        cout << "Read\t\t" << (long long)read.vectorTime << "\t\t" << (long long)read.listTime << "\t\t" << (long long)read.setTime << endl;
+        cout << "Sort\t\t" << (long long)sort.vectorTime << "\t\t" << (long long)sort.listTime << "\t\t" << (long long)sort.setTime << endl;
+        cout << "Insert\t\t" << (long long)insert.vectorTime << "\t\t" << (long long)insert.listTime << "\t\t" << (long long)insert.setTime << endl;
+        cout << "Delete\t\t" << (long long)deletes.vectorTime << "\t\t" << (long long)deletes.listTime << "\t\t" << (long long)deletes.setTime << endl;
+}
 
 
 
@@ -189,24 +189,8 @@ int main() {
    mainResults deleteResults = deletingRace(data);
 
    
-    //input chrono timer from canvas
-       // Start timing
-    auto start = high_resolution_clock::now();
-
-    // Example loop to measure
-    vector<int> numbers;
-    for(int i = 0; i < 1000000; ++i) {
-        numbers.push_back(i);
-    }
-
-    // End timing
-    auto end = high_resolution_clock::now();
-
-    // Calculate duration
-    auto duration = duration_cast<microseconds>(end - start);
-
-    // Output the duration in microseconds
-    std::cout << "Time taken: " << duration.count() << " microseconds\n";
+    // display the results
+    displayResults(readResults, sortResults, insertResults, deleteResults);
 
     return 0;
 }
