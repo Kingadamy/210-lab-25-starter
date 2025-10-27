@@ -127,6 +127,40 @@ struct mainResults {
         return results;
     }
 
+    //  race 4 for deleting. Delete the middle-ish element of the vector, the list, or the set
+
+    mainResults deletingRace(const vector<string> &data) {
+        mainResults results = {0.0, 0.0, 0.0};
+
+        // vector deleting
+        vector<string> vec(data);
+        auto start = high_resolution_clock::now();
+        vec.erase(vec.begin() + vec.size() / 2);
+
+        auto end = high_resolution_clock::now();
+        results.vectorTime = duration_cast<microseconds>(end - start).count();
+
+        // list deleting
+        list<string> lst(data);
+        start = high_resolution_clock::now();
+        auto it = lst.begin();
+        advance(it, lst.size() / 2);
+        lst.erase(it);
+
+        end = high_resolution_clock::now();
+        results.listTime = duration_cast<microseconds>(end - start).count();
+
+        // set deleting
+        set<string> st(data);
+        start = high_resolution_clock::now();
+        auto itSet = st.begin();
+        advance(itSet, st.size() / 2);
+        
+
+
+
+    }
+
 
 
 
