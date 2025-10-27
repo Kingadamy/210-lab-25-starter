@@ -1,15 +1,54 @@
 #include <iostream>
+#include <vector>
+#include <list>
+#include <set>
 #include <chrono>
+#include <fstream>
 using namespace std;
 
-//write program that times, records, and reports how long it takes each data structure to complete the races
+// use chrono script for timing from canvas
+using namespace std::chrono;
 
-//The first race is READING. The challenge is to read the 20,000 data elements into each of these data structures: vector, list, set
+// first we create a struct to hold our results
+struct mainResults {
+    double vectorTime;
+    double listTime;
+    double setTime;
+    
+};
 
+// read all 20,000 strings from the file into a vector
+    vector<string> readStringsFromFile(const string& filename) {
+        vector<string> strings;
+        ifstream file(filename);
+        string line;
+        while (getline(file, line)) {
+            strings.push_back(line);
+        }
+        return strings;
+    }
 
 
 int main() {
     
+    //input chrono timer from canvas
+       // Start timing
+    auto start = high_resolution_clock::now();
+
+    // Example loop to measure
+    vector<int> numbers;
+    for(int i = 0; i < 1000000; ++i) {
+        numbers.push_back(i);
+    }
+
+    // End timing
+    auto end = high_resolution_clock::now();
+
+    // Calculate duration
+    auto duration = duration_cast<milliseconds>(end - start);
+
+    // Output the duration in milliseconds
+    std::cout << "Time taken: " << duration.count() << " milliseconds\n";
 
     return 0;
 }
