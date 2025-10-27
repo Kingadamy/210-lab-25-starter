@@ -4,6 +4,9 @@
 #include <set>
 #include <chrono>
 #include <fstream>
+#include <string>
+#include <algorithm>
+#include <iomanip>
 using namespace std;
 
 // use chrono script for timing from canvas
@@ -22,7 +25,7 @@ struct mainResults {
         vector<string> strings; 
         ifstream file(filename); 
         string line;
-        while (getline(file, line)) {
+        while (getline(file, line)) { 
             strings.push_back(line);
         }
         return strings;
@@ -34,23 +37,51 @@ struct mainResults {
         mainResults results = {0.0, 0.0, 0.0};
 
         // vector reading
-        auto start = high_resolution_clock::now();
-        vector<string> vec(data);
+        auto start = high_resolution_clock::now(); // start timing  
+        vector<string> vec(data); // push data into vector
 
-        auto end = high_resolution_clock::now();
-        results.vectorTime = duration_cast<milliseconds>(end - start).count();
+        auto end = high_resolution_clock::now(); // end timing
+        results.vectorTime = duration_cast<microseconds>(end - start).count();  // how long it took
 
         //list reading
         start = high_resolution_clock::now();
         list<string> lst(data);
 
         end = high_resolution_clock::now();
-        results.listTime = duration_cast<milliseconds>(end - start).count();
+        results.listTime = duration_cast<microseconds>(end - start).count();
 
         //set reading
         start = high_resolution_clock::now();
+        set<string> st(data);
+
+        end = high_resolution_clock::now();
+        results.setTime = duration_cast<microseconds>(end - start).count();
+
+        return results;
+    }
 
     
+// race 2 for sorting the data structures
+    mainResults sortingRace(const vector<string>& data) {
+        mainResults results = {0.0, 0.0, 0.0};
+
+        // vector sorting
+        vector<string> vec(data);
+        auto start = high_resolution_clock::now();
+        sort(vec.begin(), vec.end());
+
+        auto end = high_resolution_clock::now();
+        results.vectorTime = duration_cast<microseconds>(end - start).count();
+
+        // list sorting
+        list<string> lst(data);
+        start = high_resolution_clock::now();
+        lst.sort();
+
+        end = high_resolution_clock::now();
+        results.listTime = duration_cast<microseconds>(end - start).count();
+
+
 
 
 
@@ -71,10 +102,10 @@ int main() {
     auto end = high_resolution_clock::now();
 
     // Calculate duration
-    auto duration = duration_cast<milliseconds>(end - start);
+    auto duration = duration_cast<microseconds>(end - start);
 
-    // Output the duration in milliseconds
-    std::cout << "Time taken: " << duration.count() << " milliseconds\n";
+    // Output the duration in microseconds
+    std::cout << "Time taken: " << duration.count() << " microseconds\n";
 
     return 0;
 }
